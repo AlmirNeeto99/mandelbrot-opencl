@@ -19,6 +19,15 @@ cl_uint getNumberOfGPUDevices(cl_platform_id platform) {
     return numberOfDevices;
 }
 
+int getNumberOfAllGPUDevices(cl_platform_id platforms[],
+                             int numberOfPlatforms) {
+    int totalNumberOfGpus = 0;
+    for (int i = 0; i < numberOfPlatforms; i++) {
+        totalNumberOfGpus += getNumberOfGPUDevices(platforms[i]);
+    }
+    return totalNumberOfGpus;
+}
+
 void listAvailablePlatforms(cl_platform_id platforms[],
                             cl_uint numberOfPlatforms) {
     char name[255], version[255], profile[255], vendor[255];
@@ -35,7 +44,24 @@ void listAvailablePlatforms(cl_platform_id platforms[],
     }
 }
 
-int main(int argc, char const *argv[]) {
+void getAllDevices(cl_platform_id platforms[], cl_uint numberOfPlatforms,
+                   cl_device_id devices[]) {
+    int currentCount = 0, numDevicesInPlatform = 0;
+
+    for (int i = 0; i < numberOfPlatforms; i++) {
+        numDevicesInPlatform = 0;
+
+        clGetDeviceIDs(platforms[i], CL_DEVICE_TYPE_GPU, 0, NULL,
+                       &numDevicesInPlatform);
+        if (numDevicesInPlatform > 0) {
+            clGetDeviceIDs(platforms[i], CL_DEVICE_TYPE_GPU,
+                           numDevicesInPlatform, devices + currentCount, NULL);
+            currentCount += numDevicesInPlatform;
+        }
+    }
+}
+
+int main(int argc, char const* argv[]) {
     cl_uint numberOfPlatforms = getNumberOfPlatforms();
     if (numberOfPlatforms > 0) {
         printf("-> Number of available OpenCL platforms: %d\n",
@@ -49,6 +75,21 @@ int main(int argc, char const *argv[]) {
     clGetPlatformIDs(numberOfPlatforms, platforms, NULL);
 
     listAvailablePlatforms(platforms, numberOfPlatforms);
+
+    int numberOfGpusDevices =
+        getNumberOfAllGPUDevices(platforms, numberOfPlatforms);
+    cl_device_id devices[numberOfGpusDevices];
+
+    getAllDevices(platforms, numberOfPlatforms, devices);
+
+    if (numberOfGpusDevices > 0) {
+        printf("-> Number of GPU devices found: %d\n", numberOfGpusDevices);
+
+        if (!devices) {
+            printf("-> Unable to read devices ID's\n");
+            return 2;
+        }
+    }
 
     return 0;
 }
