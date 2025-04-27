@@ -13,6 +13,12 @@ cl_uint getNumberOfPlatforms() {
     return numberOfPlatforms;
 }
 
+cl_uint getNumberOfGPUDevices(cl_platform_id platform) {
+    cl_uint numberOfDevices = 0;
+    clGetDeviceIDs(platform, CL_DEVICE_TYPE_GPU, 0, NULL, &numberOfDevices);
+    return numberOfDevices;
+}
+
 void listAvailablePlatforms(cl_platform_id platforms[],
                             cl_uint numberOfPlatforms) {
     char name[255], version[255], profile[255], vendor[255];
@@ -24,6 +30,8 @@ void listAvailablePlatforms(cl_platform_id platforms[],
         clGetPlatformInfo(platforms[i], CL_PLATFORM_VENDOR, -1, vendor, NULL);
         printf("-> %s\n\t-> %s\n\t->%s\n\t->%s\n", name, version, profile,
                vendor);
+        cl_uint numberOfDevices = getNumberOfGPUDevices(platforms[i]);
+        printf("\t-> Number of GPU devices: %d\n", numberOfDevices);
     }
 }
 
