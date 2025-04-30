@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "headers/cl-utils.h"
+#include "headers/common.h"
 
 int main(int argc, char const* argv[]) {
     cl_uint numberOfPlatforms = getNumberOfPlatforms();
@@ -28,6 +29,13 @@ int main(int argc, char const* argv[]) {
 
     cl_command_queue commandQueue = clCreateCommandQueueWithProperties(
         context, deviceWithHighestComputeUnits, NULL, NULL);
+
+    char* kernelSource = NULL;
+    readKernelSource("add", &kernelSource);
+
+    if (kernelSource == NULL) {
+        return 1;
+    }
 
     clReleaseContext(context);
     clReleaseCommandQueue(commandQueue);
