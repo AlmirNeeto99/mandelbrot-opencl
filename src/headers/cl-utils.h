@@ -8,10 +8,8 @@ cl_uint getNumberOfPlatforms();
 
 cl_uint getNumberOfGPUDevices(cl_platform_id platform);
 
-int getNumberOfAllGPUDevices(cl_platform_id platforms[], int numberOfPlatforms);
-
 void listAvailablePlatforms(cl_platform_id platforms[],
                             cl_uint numberOfPlatforms);
 
-void getAllDevices(cl_platform_id platforms[], cl_uint numberOfPlatforms,
-                   cl_device_id devices[]);
+cl_device_id getDeviceWithHighestComputeUnits(cl_platform_id platforms[],
+                                              cl_uint numberOfPlatforms);

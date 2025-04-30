@@ -14,15 +14,6 @@ cl_uint getNumberOfGPUDevices(cl_platform_id platform) {
     return numberOfDevices;
 }
 
-int getNumberOfAllGPUDevices(cl_platform_id platforms[],
-                             int numberOfPlatforms) {
-    int totalNumberOfGpus = 0;
-    for (int i = 0; i < numberOfPlatforms; i++) {
-        totalNumberOfGpus += getNumberOfGPUDevices(platforms[i]);
-    }
-    return totalNumberOfGpus;
-}
-
 void listAvailablePlatforms(cl_platform_id platforms[],
                             cl_uint numberOfPlatforms) {
     char name[255], version[255], profile[255], vendor[255];
@@ -43,19 +34,27 @@ void listAvailablePlatforms(cl_platform_id platforms[],
     }
 }
 
-void getAllDevices(cl_platform_id platforms[], cl_uint numberOfPlatforms,
-                   cl_device_id devices[]) {
-    int currentCount = 0, numDevicesInPlatform = 0;
+cl_device_id getDeviceWithHighestComputeUnits(cl_platform_id platforms[],
+                                              cl_uint numberOfPlatforms) {
+    cl_device_id deviceWithHighestComputeUnits = NULL;
+    cl_uint maxComputeUnits = 0;
 
     for (int i = 0; i < numberOfPlatforms; i++) {
-        numDevicesInPlatform = 0;
+        cl_uint numberOfDevices = getNumberOfGPUDevices(platforms[i]);
+        cl_device_id devices[numberOfDevices];
+        clGetDeviceIDs(platforms[i], CL_DEVICE_TYPE_GPU, numberOfDevices,
+                       devices, NULL);
 
-        clGetDeviceIDs(platforms[i], CL_DEVICE_TYPE_GPU, 0, NULL,
-                       &numDevicesInPlatform);
-        if (numDevicesInPlatform > 0) {
-            clGetDeviceIDs(platforms[i], CL_DEVICE_TYPE_GPU,
-                           numDevicesInPlatform, devices + currentCount, NULL);
-            currentCount += numDevicesInPlatform;
+        for (int j = 0; j < numberOfDevices; j++) {
+            cl_uint computeUnits;
+            clGetDeviceInfo(devices[j], CL_DEVICE_MAX_COMPUTE_UNITS,
+                            sizeof(computeUnits), &computeUnits, NULL);
+            if (computeUnits > maxComputeUnits) {
+                maxComputeUnits = computeUnits;
+                deviceWithHighestComputeUnits = devices[j];
+            }
         }
     }
+    printf("-> Highest compute units: %u\n", maxComputeUnits);
+    return deviceWithHighestComputeUnits;
 }
