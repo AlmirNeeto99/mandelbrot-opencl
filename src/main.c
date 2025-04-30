@@ -26,7 +26,11 @@ int main(int argc, char const* argv[]) {
     cl_context context = clCreateContext(
         NULL, 1, &deviceWithHighestComputeUnits, NULL, NULL, NULL);
 
+    cl_command_queue commandQueue = clCreateCommandQueueWithProperties(
+        context, deviceWithHighestComputeUnits, NULL, NULL);
+
     clReleaseContext(context);
+    clReleaseCommandQueue(commandQueue);
     clReleaseDevice(deviceWithHighestComputeUnits);
 
     return 0;
