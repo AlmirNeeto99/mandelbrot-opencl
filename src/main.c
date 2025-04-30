@@ -31,7 +31,7 @@ int main(int argc, char const* argv[]) {
         context, deviceWithHighestComputeUnits, NULL, NULL);
 
     char* kernelSource = NULL;
-    readKernelSource("add", &kernelSource);
+    readKernelSource("mandelbrot", &kernelSource);
 
     if (kernelSource == NULL) {
         return 1;
