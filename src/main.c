@@ -23,5 +23,11 @@ int main(int argc, char const* argv[]) {
 
     printDeviceInfo(deviceWithHighestComputeUnits);
 
+    cl_context context = clCreateContext(
+        NULL, 1, &deviceWithHighestComputeUnits, NULL, NULL, NULL);
+
+    clReleaseContext(context);
+    clReleaseDevice(deviceWithHighestComputeUnits);
+
     return 0;
 }
