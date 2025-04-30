@@ -70,7 +70,7 @@ cl_device_id getDeviceWithHighestComputeUnits(cl_platform_id platforms[],
 
 void printDeviceInfo(cl_device_id device) {
     char name[255], version[255], vendor[255];
-    size_t maxWorkGroupSize;
+    size_t maxWorkGroupSize, maxWorkItemSizes[3];
     cl_ulong globalMem, localMem;
     cl_uint maxComputeUnits, maxWorkItemDimensions;
 
@@ -88,6 +88,8 @@ void printDeviceInfo(cl_device_id device) {
                     NULL);
     clGetDeviceInfo(device, CL_DEVICE_MAX_WORK_GROUP_SIZE,
                     sizeof(maxWorkGroupSize), &maxWorkGroupSize, NULL);
+    clGetDeviceInfo(device, CL_DEVICE_MAX_WORK_ITEM_SIZES,
+                    sizeof(maxWorkItemSizes), maxWorkItemSizes, NULL);
 
     printf("-> Device name: %s\n", name);
     printf("-> Device version: %s\n", version);
@@ -97,5 +99,7 @@ void printDeviceInfo(cl_device_id device) {
     printf("-> Max compute units: %u\n", maxComputeUnits);
     printf("-> Max work item dimensions: %u\n", maxWorkItemDimensions);
     printf("-> Max work group size: %zu\n", maxWorkGroupSize);
+    printf("-> Max work item sizes: %zu x %zu x %zu\n", maxWorkItemSizes[0],
+           maxWorkItemSizes[1], maxWorkItemSizes[2]);
     printf("===========================================================\n");
 }
