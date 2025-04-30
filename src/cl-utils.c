@@ -69,17 +69,14 @@ cl_device_id getDeviceWithHighestComputeUnits(cl_platform_id platforms[],
 }
 
 void printDeviceInfo(cl_device_id device) {
+    cl_ulong globalMem, localMem;
     char name[255], version[255], vendor[255];
 
     clGetDeviceInfo(device, CL_DEVICE_NAME, sizeof(name), name, NULL);
     clGetDeviceInfo(device, CL_DEVICE_VERSION, sizeof(version), version, NULL);
     clGetDeviceInfo(device, CL_DEVICE_VENDOR, sizeof(vendor), vendor, NULL);
-
-    cl_ulong globalMem;
     clGetDeviceInfo(device, CL_DEVICE_GLOBAL_MEM_SIZE, sizeof(globalMem),
                     &globalMem, NULL);
-
-    cl_ulong localMem;
     clGetDeviceInfo(device, CL_DEVICE_LOCAL_MEM_SIZE, sizeof(localMem),
                     &localMem, NULL);
 
