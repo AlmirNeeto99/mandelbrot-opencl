@@ -69,8 +69,10 @@ cl_device_id getDeviceWithHighestComputeUnits(cl_platform_id platforms[],
 }
 
 void printDeviceInfo(cl_device_id device) {
-    cl_ulong globalMem, localMem;
     char name[255], version[255], vendor[255];
+    size_t maxWorkGroupSize;
+    cl_ulong globalMem, localMem;
+    cl_uint maxComputeUnits, maxWorkItemDimensions;
 
     clGetDeviceInfo(device, CL_DEVICE_NAME, sizeof(name), name, NULL);
     clGetDeviceInfo(device, CL_DEVICE_VERSION, sizeof(version), version, NULL);
@@ -79,11 +81,21 @@ void printDeviceInfo(cl_device_id device) {
                     &globalMem, NULL);
     clGetDeviceInfo(device, CL_DEVICE_LOCAL_MEM_SIZE, sizeof(localMem),
                     &localMem, NULL);
+    clGetDeviceInfo(device, CL_DEVICE_MAX_COMPUTE_UNITS,
+                    sizeof(maxComputeUnits), &maxComputeUnits, NULL);
+    clGetDeviceInfo(device, CL_DEVICE_MAX_WORK_ITEM_DIMENSIONS,
+                    sizeof(maxWorkItemDimensions), &maxWorkItemDimensions,
+                    NULL);
+    clGetDeviceInfo(device, CL_DEVICE_MAX_WORK_GROUP_SIZE,
+                    sizeof(maxWorkGroupSize), &maxWorkGroupSize, NULL);
 
     printf("-> Device name: %s\n", name);
     printf("-> Device version: %s\n", version);
     printf("-> Device vendor: %s\n", vendor);
     printf("-> Global memory size: %lu GB\n", globalMem / 1024 / 1024);
     printf("-> Local memory size: %lu MB\n", localMem / 1024);
+    printf("-> Max compute units: %u\n", maxComputeUnits);
+    printf("-> Max work item dimensions: %u\n", maxWorkItemDimensions);
+    printf("-> Max work group size: %zu\n", maxWorkGroupSize);
     printf("===========================================================\n");
 }
