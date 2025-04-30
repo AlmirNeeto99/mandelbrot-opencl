@@ -18,20 +18,8 @@ int main(int argc, char const* argv[]) {
 
     listAvailablePlatforms(platforms, numberOfPlatforms);
 
-    int numberOfGpusDevices =
-        getNumberOfAllGPUDevices(platforms, numberOfPlatforms);
-    cl_device_id devices[numberOfGpusDevices];
-
-    getAllDevices(platforms, numberOfPlatforms, devices);
-
-    if (numberOfGpusDevices > 0) {
-        printf("-> Number of GPU devices found: %d\n", numberOfGpusDevices);
-
-        if (!devices) {
-            printf("-> Unable to read devices ID's\n");
-            return 2;
-        }
-    }
+    cl_device_id deviceWithHighestComputeUnits =
+        getDeviceWithHighestComputeUnits(platforms, numberOfPlatforms);
 
     return 0;
 }
