@@ -28,10 +28,14 @@ void listAvailablePlatforms(cl_platform_id platforms[],
     char name[255], version[255], profile[255], vendor[255];
 
     for (int i = 0; i < numberOfPlatforms; i++) {
-        clGetPlatformInfo(platforms[i], CL_PLATFORM_NAME, -1, name, NULL);
-        clGetPlatformInfo(platforms[i], CL_PLATFORM_VERSION, -1, version, NULL);
-        clGetPlatformInfo(platforms[i], CL_PLATFORM_PROFILE, -1, profile, NULL);
-        clGetPlatformInfo(platforms[i], CL_PLATFORM_VENDOR, -1, vendor, NULL);
+        clGetPlatformInfo(platforms[i], CL_PLATFORM_NAME, sizeof(name), name,
+                          NULL);
+        clGetPlatformInfo(platforms[i], CL_PLATFORM_VERSION, sizeof(version),
+                          version, NULL);
+        clGetPlatformInfo(platforms[i], CL_PLATFORM_PROFILE, sizeof(profile),
+                          profile, NULL);
+        clGetPlatformInfo(platforms[i], CL_PLATFORM_VENDOR, sizeof(vendor),
+                          vendor, NULL);
         printf("-> %s\n\t-> %s\n\t->%s\n\t->%s\n", name, version, profile,
                vendor);
         cl_uint numberOfDevices = getNumberOfGPUDevices(platforms[i]);
