@@ -37,9 +37,15 @@ int main(int argc, char const* argv[]) {
         return 1;
     }
 
+    cl_program program = clCreateProgramWithSource(
+        context, 1, (const char**)&kernelSource, NULL, NULL);
+
     clReleaseContext(context);
     clReleaseCommandQueue(commandQueue);
+    clReleaseProgram(program);
     clReleaseDevice(deviceWithHighestComputeUnits);
+
+    free(kernelSource);
 
     return 0;
 }
