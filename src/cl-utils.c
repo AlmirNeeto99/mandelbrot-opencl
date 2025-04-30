@@ -94,8 +94,8 @@ void printDeviceInfo(cl_device_id device) {
     printf("-> Device name: %s\n", name);
     printf("-> Device version: %s\n", version);
     printf("-> Device vendor: %s\n", vendor);
-    printf("-> Global memory size: %lu GB\n", globalMem / 1024 / 1024);
-    printf("-> Local memory size: %lu MB\n", localMem / 1024);
+    printf("-> Global memory size: %lu GB\n", globalMem / 1024 / 1024 / 1024);
+    printf("-> Local memory size: %lu KB\n", localMem / 1024);
     printf("-> Max compute units: %u\n", maxComputeUnits);
     printf("-> Max work item dimensions: %u\n", maxWorkItemDimensions);
     printf("-> Max work group size: %zu\n", maxWorkGroupSize);
