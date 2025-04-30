@@ -56,6 +56,14 @@ cl_device_id getDeviceWithHighestComputeUnits(cl_platform_id platforms[],
             }
         }
     }
+
+    char name[255];
+
+    clGetDeviceInfo(deviceWithHighestComputeUnits, CL_DEVICE_NAME, sizeof(name),
+                    name, NULL);
+
+    printf("-> Device with highest compute units: %s\n", name);
     printf("-> Highest compute units: %u\n", maxComputeUnits);
+    printf("===========================================================\n");
     return deviceWithHighestComputeUnits;
 }
