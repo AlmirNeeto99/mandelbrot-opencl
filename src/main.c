@@ -21,5 +21,7 @@ int main(int argc, char const* argv[]) {
     cl_device_id deviceWithHighestComputeUnits =
         getDeviceWithHighestComputeUnits(platforms, numberOfPlatforms);
 
+    printDeviceInfo(deviceWithHighestComputeUnits);
+
     return 0;
 }

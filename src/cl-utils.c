@@ -76,11 +76,17 @@ void printDeviceInfo(cl_device_id device) {
     clGetDeviceInfo(device, CL_DEVICE_VENDOR, sizeof(vendor), vendor, NULL);
 
     cl_ulong globalMem;
-    cl_int err = clGetDeviceInfo(device, CL_DEVICE_GLOBAL_MEM_SIZE,
-                                 sizeof(globalMem), &globalMem, NULL);
+    clGetDeviceInfo(device, CL_DEVICE_GLOBAL_MEM_SIZE, sizeof(globalMem),
+                    &globalMem, NULL);
+
+    cl_ulong localMem;
+    clGetDeviceInfo(device, CL_DEVICE_LOCAL_MEM_SIZE, sizeof(localMem),
+                    &localMem, NULL);
 
     printf("-> Device name: %s\n", name);
     printf("-> Device version: %s\n", version);
     printf("-> Device vendor: %s\n", vendor);
-    printf("-> Global memory size: %lu bytes\n", globalMem / 1024 / 1024);
+    printf("-> Global memory size: %lu GB\n", globalMem / 1024 / 1024);
+    printf("-> Local memory size: %lu MB\n", localMem / 1024);
+    printf("===========================================================\n");
 }
