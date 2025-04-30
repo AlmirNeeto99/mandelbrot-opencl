@@ -1,0 +1,6 @@
+# Ignore all files in this directory
+*
+
+# Allow specific files if needed
+!mandelbrot.cl
+!.gitignore
