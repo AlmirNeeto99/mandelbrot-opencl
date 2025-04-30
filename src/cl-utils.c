@@ -67,3 +67,20 @@ cl_device_id getDeviceWithHighestComputeUnits(cl_platform_id platforms[],
     printf("===========================================================\n");
     return deviceWithHighestComputeUnits;
 }
+
+void printDeviceInfo(cl_device_id device) {
+    char name[255], version[255], vendor[255];
+
+    clGetDeviceInfo(device, CL_DEVICE_NAME, sizeof(name), name, NULL);
+    clGetDeviceInfo(device, CL_DEVICE_VERSION, sizeof(version), version, NULL);
+    clGetDeviceInfo(device, CL_DEVICE_VENDOR, sizeof(vendor), vendor, NULL);
+
+    cl_ulong globalMem;
+    cl_int err = clGetDeviceInfo(device, CL_DEVICE_GLOBAL_MEM_SIZE,
+                                 sizeof(globalMem), &globalMem, NULL);
+
+    printf("-> Device name: %s\n", name);
+    printf("-> Device version: %s\n", version);
+    printf("-> Device vendor: %s\n", vendor);
+    printf("-> Global memory size: %lu bytes\n", globalMem / 1024 / 1024);
+}

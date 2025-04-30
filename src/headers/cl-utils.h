@@ -13,3 +13,5 @@ void listAvailablePlatforms(cl_platform_id platforms[],
 
 cl_device_id getDeviceWithHighestComputeUnits(cl_platform_id platforms[],
                                               cl_uint numberOfPlatforms);
+
+void printDeviceInfo(cl_device_id device);
