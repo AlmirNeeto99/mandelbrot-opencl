@@ -40,9 +40,19 @@ int main(int argc, char const* argv[]) {
     cl_program program = clCreateProgramWithSource(
         context, 1, (const char**)&kernelSource, NULL, NULL);
 
-    clReleaseContext(context);
-    clReleaseCommandQueue(commandQueue);
+    cl_kernel kernel = clCreateKernel(program, "mandelbrot", NULL);
+
+    cl_int programBuilt = clBuildProgram(
+        program, 1, &deviceWithHighestComputeUnits, NULL, NULL, NULL);
+
+    if (programBuilt != CL_SUCCESS) {
+        printf("-> Error building program!\n");
+    }
+
+    clReleaseKernel(kernel);
     clReleaseProgram(program);
+    clReleaseCommandQueue(commandQueue);
+    clReleaseContext(context);
     clReleaseDevice(deviceWithHighestComputeUnits);
 
     free(kernelSource);
