@@ -32,3 +32,13 @@ void readKernelSource(const char *filename, char **source) {
 
     fclose(file);
 }
+
+double *create2DSpace(int width, int height) {
+    double *space = (double *)malloc(width * height * sizeof(double));
+    if (space == NULL) {
+        printf("-> Error allocating memory for 2D space!\n");
+        return NULL;
+    }
+
+    return space;
+}

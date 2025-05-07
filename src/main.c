@@ -4,16 +4,6 @@
 #include "headers/cl-utils.h"
 #include "headers/common.h"
 
-double* create2DSpace(int width, int height) {
-    double* space = (double*)malloc(width * height * sizeof(double));
-    if (space == NULL) {
-        printf("-> Error allocating memory for 2D space!\n");
-        return NULL;
-    }
-
-    return space;
-}
-
 int main(int argc, char const* argv[]) {
     cl_uint numberOfPlatforms = getNumberOfPlatforms();
     if (numberOfPlatforms > 0) {
