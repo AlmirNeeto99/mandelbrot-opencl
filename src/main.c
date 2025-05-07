@@ -47,12 +47,12 @@ int main(int argc, char const* argv[]) {
         context, 1, (const char**)&kernelSource, NULL, &err);
     printError(err, "Creating program");
 
-    cl_kernel kernel = clCreateKernel(program, "mandelbrot", &err);
-    printError(err, "Creating kernel");
-
     err = clBuildProgram(program, 1, &deviceWithHighestComputeUnits, NULL, NULL,
                          NULL);
     printError(err, "Building program");
+
+    cl_kernel kernel = clCreateKernel(program, "mandelbrot", &err);
+    printError(err, "Creating kernel");
 
     cl_mem mandelbrotBuffer =
         clCreateBuffer(context, CL_MEM_WRITE_ONLY | CL_MEM_COPY_HOST_PTR,
