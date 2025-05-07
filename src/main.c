@@ -4,6 +4,16 @@
 #include "headers/cl-utils.h"
 #include "headers/common.h"
 
+double* create2DSpace(int width, int height) {
+    double* space = (double*)malloc(width * height * sizeof(double));
+    if (space == NULL) {
+        printf("-> Error allocating memory for 2D space!\n");
+        return NULL;
+    }
+
+    return space;
+}
+
 int main(int argc, char const* argv[]) {
     cl_uint numberOfPlatforms = getNumberOfPlatforms();
     if (numberOfPlatforms > 0) {
@@ -13,6 +23,9 @@ int main(int argc, char const* argv[]) {
         printf("-> No OpenCL platform found!\n");
         return 1;
     }
+
+    int width = 800, height = 800;
+    double* mandelbrotSpace = create2DSpace(width, height);
 
     cl_platform_id platforms[numberOfPlatforms];
     clGetPlatformIDs(numberOfPlatforms, platforms, NULL);
@@ -56,6 +69,7 @@ int main(int argc, char const* argv[]) {
     clReleaseDevice(deviceWithHighestComputeUnits);
 
     free(kernelSource);
+    free(mandelbrotSpace);
 
     return 0;
 }
