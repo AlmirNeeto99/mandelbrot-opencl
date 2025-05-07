@@ -1,3 +1,4 @@
+#include <png.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -19,7 +20,7 @@ int main(int argc, char const* argv[]) {
     double yMin = -1.5, yMax = 1.5, xMin = -2.0, xMax = 1.0;
     int width = 7680, height = 4320;
     int maxIterations = 10000;
-    double* mandelbrotSpace = create2DSpace(width, height);
+    int* mandelbrotSpace = create2DSpace(width, height);
 
     cl_platform_id platforms[numberOfPlatforms];
     clGetPlatformIDs(numberOfPlatforms, platforms, NULL);
@@ -57,8 +58,8 @@ int main(int argc, char const* argv[]) {
     printError(err, "Creating kernel");
 
     cl_mem mandelbrotBuffer =
-        clCreateBuffer(context, CL_MEM_WRITE_ONLY,
-                       width * height * sizeof(double), mandelbrotSpace, &err);
+        clCreateBuffer(context, CL_MEM_WRITE_ONLY | CL_MEM_COPY_HOST_PTR,
+                       width * height * sizeof(int), mandelbrotSpace, &err);
     printError(err, "Creating buffer for mandelbrotSpace");
 
     err = clSetKernelArg(kernel, 0, sizeof(int), &xMin);
@@ -88,11 +89,73 @@ int main(int argc, char const* argv[]) {
     err = clFinish(commandQueue);
     printError(err, "Finishing command queue");
 
+    clEnqueueReadBuffer(commandQueue, mandelbrotBuffer, CL_TRUE, 0,
+                        width * height * sizeof(int), mandelbrotSpace, 0, NULL,
+                        NULL);
+    printError(err, "Reading buffer");
+
     clReleaseKernel(kernel);
     clReleaseProgram(program);
     clReleaseCommandQueue(commandQueue);
     clReleaseContext(context);
     clReleaseDevice(deviceWithHighestComputeUnits);
+
+    const char* outputName = "mandelbrot.png";
+
+    FILE* mandelbrot = fopen(outputName, "wb");
+
+    if (!mandelbrot) {
+        printf("Unable to open %s file\n", outputName);
+        return -1;
+    }
+
+    png_structp png =
+        png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+    if (!png) {
+        fclose(mandelbrot);
+        return -1;
+    }
+
+    png_infop info = png_create_info_struct(png);
+    if (!info) {
+        png_destroy_write_struct(&png, NULL);
+        fclose(mandelbrot);
+        return -1;
+    }
+
+    if (setjmp(png_jmpbuf(png))) {
+        png_destroy_write_struct(&png, &info);
+        fclose(mandelbrot);
+        return -1;
+    }
+
+    png_set_compression_level(png, 0);
+    png_init_io(png, mandelbrot);
+    png_set_IHDR(png, info, width, height, 8, PNG_COLOR_TYPE_RGB,
+                 PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT,
+                 PNG_FILTER_TYPE_DEFAULT);
+    png_write_info(png, info);
+
+    png_bytep row = (png_bytep)malloc(3 * width * sizeof(png_byte));
+
+    int color = 0;
+    double proportion = 0;
+
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            proportion =
+                (double)mandelbrotSpace[x * height + y] / maxIterations;
+            color = (int)(proportion * 255);
+            row[x * 3] = color;      // Red
+            row[x * 3 + 1] = color;  // Green
+            row[x * 3 + 2] = color;  // Blue
+        }
+        png_write_row(png, row);
+    }
+    free(row);
+
+    png_write_end(png, NULL);
+    png_destroy_write_struct(&png, &info);
 
     free(kernelSource);
     free(mandelbrotSpace);
