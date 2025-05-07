@@ -14,7 +14,9 @@ int main(int argc, char const* argv[]) {
         return 1;
     }
 
-    int width = 800, height = 800;
+    cl_int err;
+
+    int width = 7680, height = 4320;
     double* mandelbrotSpace = create2DSpace(width, height);
 
     cl_platform_id platforms[numberOfPlatforms];
@@ -39,18 +41,40 @@ int main(int argc, char const* argv[]) {
     if (kernelSource == NULL) {
         return 1;
     }
+    printf("============================================\n");
 
     cl_program program = clCreateProgramWithSource(
-        context, 1, (const char**)&kernelSource, NULL, NULL);
+        context, 1, (const char**)&kernelSource, NULL, &err);
+    printError(err, "Creating program");
 
-    cl_kernel kernel = clCreateKernel(program, "mandelbrot", NULL);
+    cl_kernel kernel = clCreateKernel(program, "mandelbrot", &err);
+    printError(err, "Creating kernel");
 
-    cl_int programBuilt = clBuildProgram(
-        program, 1, &deviceWithHighestComputeUnits, NULL, NULL, NULL);
+    err = clBuildProgram(program, 1, &deviceWithHighestComputeUnits, NULL, NULL,
+                         NULL);
+    printError(err, "Building program");
 
-    if (programBuilt != CL_SUCCESS) {
-        printf("-> Error building program!\n");
+    cl_mem mandelbrotBuffer =
+        clCreateBuffer(context, CL_MEM_WRITE_ONLY | CL_MEM_COPY_HOST_PTR,
+                       width * height * sizeof(double), mandelbrotSpace, NULL);
+
+    err = clSetKernelArg(kernel, 7, sizeof(cl_mem), &mandelbrotBuffer);
+
+    printError(err, "Setting kernel argument 7");
+
+    size_t globalSize[2] = {width, height};
+    size_t localSize[2] = {32, 16};
+
+    clEnqueueNDRangeKernel(commandQueue, kernel, 2, NULL, globalSize, localSize,
+                           0, NULL, NULL);
+
+    printf("-> Kernel enqueued!\n");
+    err = clFinish(commandQueue);
+
+    if (err != CL_SUCCESS) {
+        printf("-> Error finishing command queue!\n");
     }
+    printf("-> Command queue finished!\n");
 
     clReleaseKernel(kernel);
     clReleaseProgram(program);
