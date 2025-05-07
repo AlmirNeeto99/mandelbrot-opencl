@@ -16,7 +16,9 @@ int main(int argc, char const* argv[]) {
 
     cl_int err;
 
+    double yMin = -1.5, yMax = 1.5, xMin = -2.0, xMax = 1.0;
     int width = 7680, height = 4320;
+    int maxIterations = 10000;
     double* mandelbrotSpace = create2DSpace(width, height);
 
     cl_platform_id platforms[numberOfPlatforms];
@@ -56,25 +58,35 @@ int main(int argc, char const* argv[]) {
 
     cl_mem mandelbrotBuffer =
         clCreateBuffer(context, CL_MEM_WRITE_ONLY | CL_MEM_COPY_HOST_PTR,
-                       width * height * sizeof(double), mandelbrotSpace, NULL);
+                       width * height * sizeof(double), mandelbrotSpace, &err);
+    printError(err, "Creating buffer for mandelbrotSpace");
 
+    err = clSetKernelArg(kernel, 0, sizeof(int), &xMin);
+    printError(err, "Setting kernel argument 0");
+    err = clSetKernelArg(kernel, 1, sizeof(int), &xMax);
+    printError(err, "Setting kernel argument 1");
+    err = clSetKernelArg(kernel, 2, sizeof(int), &yMin);
+    printError(err, "Setting kernel argument 2");
+    err = clSetKernelArg(kernel, 3, sizeof(int), &yMax);
+    printError(err, "Setting kernel argument 3");
+    err = clSetKernelArg(kernel, 4, sizeof(int), &width);
+    printError(err, "Setting kernel argument 4");
+    err = clSetKernelArg(kernel, 5, sizeof(int), &height);
+    printError(err, "Setting kernel argument 5");
+    err = clSetKernelArg(kernel, 6, sizeof(int), &maxIterations);
+    printError(err, "Setting kernel argument 6");
     err = clSetKernelArg(kernel, 7, sizeof(cl_mem), &mandelbrotBuffer);
-
     printError(err, "Setting kernel argument 7");
 
     size_t globalSize[2] = {width, height};
     size_t localSize[2] = {32, 16};
 
-    clEnqueueNDRangeKernel(commandQueue, kernel, 2, NULL, globalSize, localSize,
-                           0, NULL, NULL);
+    err = clEnqueueNDRangeKernel(commandQueue, kernel, 2, NULL, globalSize,
+                                 localSize, 0, NULL, NULL);
+    printError(err, "Enqueueing kernel");
 
-    printf("-> Kernel enqueued!\n");
     err = clFinish(commandQueue);
-
-    if (err != CL_SUCCESS) {
-        printf("-> Error finishing command queue!\n");
-    }
-    printf("-> Command queue finished!\n");
+    printError(err, "Finishing command queue");
 
     clReleaseKernel(kernel);
     clReleaseProgram(program);
