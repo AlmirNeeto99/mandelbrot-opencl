@@ -5,7 +5,7 @@ LINK=-lOpenCL -lpng -lm
 DEPS=src/cl-utils.c src/common.c
 
 build-opencl: src/main.c $(DEPS)
-		$(CC) $(DEPS) src/main.c -o opencl $(LINK)
+		$(CC) $(DEPS) src/main.c -o mandelbrot $(LINK)
 
 clean:
-	rm opencl
+	rm mandelbrot
