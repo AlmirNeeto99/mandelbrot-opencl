@@ -57,7 +57,7 @@ int main(int argc, char const* argv[]) {
     printError(err, "Creating kernel");
 
     cl_mem mandelbrotBuffer =
-        clCreateBuffer(context, CL_MEM_WRITE_ONLY | CL_MEM_COPY_HOST_PTR,
+        clCreateBuffer(context, CL_MEM_WRITE_ONLY,
                        width * height * sizeof(double), mandelbrotSpace, &err);
     printError(err, "Creating buffer for mandelbrotSpace");
 
