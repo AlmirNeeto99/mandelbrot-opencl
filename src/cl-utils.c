@@ -108,3 +108,143 @@ void printDeviceInfo(cl_device_id device) {
            preferredWorkGroupSize);
     printf("===========================================================\n");
 }
+
+void printError(cl_int error, char *message) {
+    switch (error) {
+        case CL_SUCCESS:
+            return;
+        case CL_DEVICE_NOT_FOUND:
+            printf("-> Device not found!\n");
+            break;
+        case CL_DEVICE_NOT_AVAILABLE:
+            printf("-> Device not available!\n");
+            break;
+        case CL_COMPILER_NOT_AVAILABLE:
+            printf("-> Compiler not available!\n");
+            break;
+        case CL_MEM_OBJECT_ALLOCATION_FAILURE:
+            printf("-> Memory object allocation failure!\n");
+            break;
+        case CL_OUT_OF_RESOURCES:
+            printf("-> Out of resources!\n");
+            break;
+        case CL_OUT_OF_HOST_MEMORY:
+            printf("-> Out of host memory!\n");
+            break;
+        case CL_PROFILING_INFO_NOT_AVAILABLE:
+            printf("-> Profiling information not available!\n");
+            break;
+        case CL_MEM_COPY_OVERLAP:
+            printf("-> Memory copy overlap!\n");
+            break;
+        case CL_IMAGE_FORMAT_MISMATCH:
+            printf("-> Image format mismatch!\n");
+            break;
+        case CL_INVALID_VALUE:
+            printf("-> Invalid value!\n");
+            break;
+        case CL_INVALID_DEVICE_TYPE:
+            printf("-> Invalid device type!\n");
+            break;
+        case CL_INVALID_PLATFORM:
+            printf("-> Invalid platform!\n");
+            break;
+        case CL_INVALID_DEVICE:
+            printf("-> Invalid device!\n");
+            break;
+        case CL_INVALID_CONTEXT:
+            printf("-> Invalid context!\n");
+            break;
+        case CL_INVALID_QUEUE_PROPERTIES:
+            printf("-> Invalid queue properties!\n");
+            break;
+        case CL_INVALID_COMMAND_QUEUE:
+            printf("-> Invalid command queue!\n");
+            break;
+        case CL_INVALID_HOST_PTR:
+            printf("-> Invalid host pointer!\n");
+            break;
+        case CL_INVALID_MEM_OBJECT:
+            printf("-> Invalid memory object!\n");
+            break;
+        case CL_INVALID_IMAGE_FORMAT_DESCRIPTOR:
+            printf("-> Invalid image format descriptor!\n");
+            break;
+        case CL_INVALID_IMAGE_SIZE:
+            printf("-> Invalid image size!\n");
+            break;
+        case CL_INVALID_SAMPLER:
+            printf("-> Invalid sampler!\n");
+            break;
+        case CL_INVALID_BINARY:
+            printf("-> Invalid binary!\n");
+            break;
+        case CL_INVALID_BUILD_OPTIONS:
+            printf("-> Invalid build options!\n");
+            break;
+        case CL_INVALID_PROGRAM:
+            printf("-> Invalid program!\n");
+            break;
+        case CL_INVALID_PROGRAM_EXECUTABLE:
+            printf("-> Invalid program executable!\n");
+            break;
+        case CL_INVALID_KERNEL_NAME:
+            printf("-> Invalid kernel name!\n");
+            break;
+        case CL_INVALID_KERNEL_DEFINITION:
+            printf("-> Invalid kernel definition!\n");
+            break;
+        case CL_INVALID_KERNEL:
+            printf("-> Invalid kernel!\n");
+            break;
+        case CL_INVALID_ARG_INDEX:
+            printf("-> Invalid argument index!\n");
+            break;
+        case CL_INVALID_ARG_VALUE:
+            printf("-> Invalid argument value!\n");
+            break;
+        case CL_INVALID_ARG_SIZE:
+            printf("-> Invalid argument size!\n");
+            break;
+        case CL_INVALID_KERNEL_ARGS:
+            printf("-> Invalid kernel arguments!\n");
+            break;
+        case CL_INVALID_WORK_DIMENSION:
+            printf("-> Invalid work dimension!\n");
+            break;
+        case CL_INVALID_WORK_GROUP_SIZE:
+            printf("-> Invalid work group size!\n");
+            break;
+        case CL_INVALID_WORK_ITEM_SIZE:
+            printf("-> Invalid work item size!\n");
+            break;
+        case CL_INVALID_GLOBAL_OFFSET:
+            printf("-> Invalid global offset!\n");
+            break;
+        case CL_INVALID_EVENT_WAIT_LIST:
+            printf("-> Invalid event wait list!\n");
+            break;
+        case CL_INVALID_EVENT:
+            printf("-> Invalid event!\n");
+            break;
+        case CL_INVALID_OPERATION:
+            printf("-> Invalid operation!\n");
+            break;
+        case CL_INVALID_GL_OBJECT:
+            printf("-> Invalid GL object!\n");
+            break;
+        case CL_INVALID_BUFFER_SIZE:
+            printf("-> Invalid buffer size!\n");
+            break;
+        case CL_INVALID_MIP_LEVEL:
+            printf("-> Invalid mip level!\n");
+            break;
+        case CL_INVALID_GLOBAL_WORK_SIZE:
+            printf("-> Invalid global work size!\n");
+            break;
+    }
+    if (message != NULL) {
+        printf("-> %s\n", message);
+    }
+    printf("===========================================================\n");
+}
