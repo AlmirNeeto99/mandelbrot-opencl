@@ -112,6 +112,7 @@ void printDeviceInfo(cl_device_id device) {
 void printError(cl_int error, char *message) {
     switch (error) {
         case CL_SUCCESS:
+            printf("-> Success | %s!\n", message);
             return;
         case CL_DEVICE_NOT_FOUND:
             printf("-> Device not found!\n");
@@ -243,8 +244,7 @@ void printError(cl_int error, char *message) {
             printf("-> Invalid global work size!\n");
             break;
     }
-    if (message != NULL) {
-        printf("-> %s\n", message);
-    }
+
+    printf("-> %s\n", message);
     printf("===========================================================\n");
 }
