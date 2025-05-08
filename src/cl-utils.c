@@ -248,3 +248,18 @@ void printError(cl_int error, char *message) {
     printf("-> %s\n", message);
     printf("===========================================================\n");
 }
+void printWorkGroupInfo(size_t globalSize[2], size_t localSize[2]) {
+    printf("-> Global size: %zu x %zu\n", globalSize[0], globalSize[1]);
+    printf("-> Local size: %zu x %zu\n", localSize[0], localSize[1]);
+
+    size_t globalSizeX = globalSize[0] / localSize[0];
+    size_t globalSizeY = globalSize[1] / localSize[1];
+
+    printf("-> Number of groups: %zu x %zu\n", globalSizeX, globalSizeY);
+    printf("-> Total number of groups: %zu\n", globalSizeX * globalSizeY);
+    printf("-> Number of work items: %zu\n", globalSize[0] * globalSize[1]);
+    printf("-> Number of work items per group: %zu\n",
+           localSize[0] * localSize[1]);
+
+    printf("============================================\n");
+}

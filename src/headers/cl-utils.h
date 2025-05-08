@@ -4,8 +4,10 @@
 
 #include <CL/cl.h>
 
+void printDeviceInfo(cl_device_id device);
+void printError(cl_int error, char *message);
+void printWorkGroupInfo(size_t groupSize[2], size_t localSize[2]);
 cl_uint getNumberOfPlatforms();
-
 cl_uint getNumberOfGPUDevices(cl_platform_id platform);
 
 void listAvailablePlatforms(cl_platform_id platforms[],
@@ -13,7 +15,3 @@ void listAvailablePlatforms(cl_platform_id platforms[],
 
 cl_device_id getDeviceWithHighestComputeUnits(cl_platform_id platforms[],
                                               cl_uint numberOfPlatforms);
-
-void printDeviceInfo(cl_device_id device);
-
-void printError(cl_int error, char *message);
