@@ -62,21 +62,21 @@ int main(int argc, char const* argv[]) {
     printError(err, "Creating buffer for mandelbrotSpace");
 
     err = clSetKernelArg(kernel, 0, sizeof(int), &xMin);
-    printError(err, "Setting kernel argument 0");
+    printError(err, "Setting kernel argument 0 - xMin");
     err = clSetKernelArg(kernel, 1, sizeof(int), &xMax);
-    printError(err, "Setting kernel argument 1");
+    printError(err, "Setting kernel argument 1 - xMax");
     err = clSetKernelArg(kernel, 2, sizeof(int), &yMin);
-    printError(err, "Setting kernel argument 2");
+    printError(err, "Setting kernel argument 2 - yMin");
     err = clSetKernelArg(kernel, 3, sizeof(int), &yMax);
-    printError(err, "Setting kernel argument 3");
+    printError(err, "Setting kernel argument 3 - yMax");
     err = clSetKernelArg(kernel, 4, sizeof(int), &width);
-    printError(err, "Setting kernel argument 4");
+    printError(err, "Setting kernel argument 4 - width");
     err = clSetKernelArg(kernel, 5, sizeof(int), &height);
-    printError(err, "Setting kernel argument 5");
+    printError(err, "Setting kernel argument 5 - height");
     err = clSetKernelArg(kernel, 6, sizeof(int), &maxIterations);
-    printError(err, "Setting kernel argument 6");
+    printError(err, "Setting kernel argument 6 - maxIterations");
     err = clSetKernelArg(kernel, 7, sizeof(cl_mem), &mandelbrotBuffer);
-    printError(err, "Setting kernel argument 7");
+    printError(err, "Setting kernel argument 7 - mandelbrotBuffer");
 
     printf("============================================\n");
 
