@@ -115,7 +115,7 @@ int main(int argc, char const* argv[]) {
     clReleaseContext(context);
     clReleaseDevice(deviceWithHighestComputeUnits);
 
-    const char* outputName = "mandelbrot.png";
+    const char* outputName = "mandelbrots/mandelbrot.png";
 
     FILE* mandelbrot = fopen(outputName, "wb");
 
