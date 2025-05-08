@@ -17,7 +17,7 @@ int main(int argc, char const* argv[]) {
 
     cl_int err;
 
-    float yMin = -1.5, yMax = 1.5, xMin = -2.0, xMax = 1.0;
+    float yMin = -1.5f, yMax = 1.5f, xMin = -2.0f, xMax = 1.0f;
     int width = 7680, height = 4320;
     int maxIterations = 100;
     int* mandelbrotSpace = create2DSpace(width, height);
