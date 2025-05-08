@@ -4,11 +4,24 @@ __kernel void mandelbrot(__const float yMin, __const float yMax,
                          __const int maxIterations,
                          __global int *mandelbrotSpace) {
 
+  int groupIdX = get_group_id(0);
+  int groupIdY = get_group_id(1);
   int i = get_global_id(0);
   int j = get_global_id(1);
 
   if (i >= width || j >= height) {
     return;
+  }
+
+  if (groupIdX == 0 && groupIdY == 0 && i == 0 && j == 0) {
+    printf("-> Mandelbrot kernel launched with %d x %d work items\n", width,
+           height);
+    printf("-> Mandelbrot kernel launched with X = %f x %f\n", xMin, xMax);
+    printf("-> Mandelbrot kernel launched with Y = %f x %f\n", yMin, yMax);
+    printf("-> Mandelbrot kernel launched with %d iterations\n", maxIterations);
+    printf("-> Mandelbrot kernel launched with %zu x %zu x %zu x %zu\n",
+           get_local_size(0), get_local_size(1), get_num_groups(0),
+           get_num_groups(1));
   }
 
   int iterations = 0;
