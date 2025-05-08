@@ -1,5 +1,5 @@
-__kernel void mandelbrot(__const float yMin, __const float yMax,
-                         __const float xMin, __const float xMax,
+__kernel void mandelbrot(__const float xMin, __const float xMax,
+                         __const float yMin, __const float yMax,
                          __const int width, __const int height,
                          __const int maxIterations,
                          __global int *mandelbrotSpace) {
