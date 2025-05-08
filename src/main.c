@@ -57,9 +57,8 @@ int main(int argc, char const* argv[]) {
     cl_kernel kernel = clCreateKernel(program, "mandelbrot", &err);
     printError(err, "Creating kernel");
 
-    cl_mem mandelbrotBuffer =
-        clCreateBuffer(context, CL_MEM_WRITE_ONLY | CL_MEM_COPY_HOST_PTR,
-                       width * height * sizeof(int), mandelbrotSpace, &err);
+    cl_mem mandelbrotBuffer = clCreateBuffer(
+        context, CL_MEM_READ_WRITE, width * height * sizeof(int), NULL, &err);
     printError(err, "Creating buffer for mandelbrotSpace");
 
     err = clSetKernelArg(kernel, 0, sizeof(int), &xMin);
@@ -109,6 +108,7 @@ int main(int argc, char const* argv[]) {
                         NULL);
     printError(err, "Reading buffer");
 
+    clReleaseMemObject(mandelbrotBuffer);
     clReleaseKernel(kernel);
     clReleaseProgram(program);
     clReleaseCommandQueue(commandQueue);
