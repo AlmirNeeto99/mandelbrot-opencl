@@ -82,6 +82,10 @@ int main(int argc, char const* argv[]) {
     size_t globalSize[2] = {width, height};
     size_t localSize[2] = {32, 16};
 
+    printf("-> Global size: %zu x %zu\n", globalSize[0], globalSize[1]);
+    printf("-> Local size: %zu x %zu\n", localSize[0], localSize[1]);
+    printf("============================================\n");
+
     err = clEnqueueNDRangeKernel(commandQueue, kernel, 2, NULL, globalSize,
                                  localSize, 0, NULL, NULL);
     printError(err, "Enqueueing kernel");
