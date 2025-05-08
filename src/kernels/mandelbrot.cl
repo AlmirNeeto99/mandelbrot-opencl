@@ -31,18 +31,20 @@ __kernel void mandelbrot(__const float xMin, __const float xMax,
   const float y0 = yMin + ySize * j;
 
   int iterations = 0;
-  float zx = 0.0f, zy = 0.0f;
+  float zx = 0.0f, zy = 0.0f, zxOld;
   bool escaped = false;
 
   while (iterations < maxIterations) {
 
-    if (sqrt(pow(zx, 2) + pow(zy, 2)) > 2.0f) {
+    if (sqrt(zx * zx + zy * zy) > 2.0f) {
       escaped = true;
       break;
     }
 
-    zx = pow(zx, 2) - pow(zy, 2) + x0;
-    zy = 2.0f * zx * zy + y0;
+    zxOld = zx;
+
+    zx = zx * zx - zy * zy + x0;
+    zy = 2.0f * zxOld * zy + y0;
 
     iterations++;
   }
