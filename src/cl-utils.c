@@ -245,7 +245,7 @@ void printError(cl_int error, char *message) {
             break;
     }
 
-    printf("-> %s\n", message);
+    printf("-> Error message: %s\n", message);
     printf("===========================================================\n");
 }
 void printWorkGroupInfo(size_t globalSize[2], size_t localSize[2]) {
