@@ -78,10 +78,10 @@ int main(int argc, char const* argv[]) {
     err = clSetKernelArg(kernel, 7, sizeof(cl_mem), &mandelbrotBuffer);
     printError(err, "Setting kernel argument 7");
 
+    printf("============================================\n");
+
     size_t globalSize[2] = {width, height};
     size_t localSize[2] = {32, 16};
-
-    printf("============================================\n");
 
     printf("-> Global size: %zu x %zu\n", globalSize[0], globalSize[1]);
     printf("-> Local size: %zu x %zu\n", localSize[0], localSize[1]);
