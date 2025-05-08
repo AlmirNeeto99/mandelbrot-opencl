@@ -147,9 +147,6 @@ int main(int argc, char const* argv[]) {
 
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
-            // if (mandelbrotSpace[y * width + x] > 5000) {
-            //     printf("Iteration: %d\n", mandelbrotSpace[y * width + x]);
-            // }
             proportion = (double)mandelbrotSpace[y * width + x] / maxIterations;
             color = (int)(proportion * 255);
             row[x * 3] = color;      // Red
