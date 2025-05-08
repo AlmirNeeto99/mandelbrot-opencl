@@ -24,21 +24,20 @@ __kernel void mandelbrot(__const float xMin, __const float xMax,
            get_num_groups(1));
   }
 
-  int iterations = 0;
-
   const float xSize = (xMax - xMin) / width;
   const float ySize = (yMax - yMin) / height;
 
   const float x0 = xMin + xSize * i;
   const float y0 = yMin + ySize * j;
 
+  int iterations = 0;
   float zx = 0, zy = 0;
-  int escaped = 0;
+  bool escaped = false;
 
   while (iterations < maxIterations) {
 
     if (sqrt(pow(zx, 2) + pow(zy, 2)) > 2) {
-      escaped = 1;
+      escaped = true;
       break;
     }
 
