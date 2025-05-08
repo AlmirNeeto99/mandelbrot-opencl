@@ -17,9 +17,9 @@ int main(int argc, char const* argv[]) {
 
     cl_int err;
 
-    double yMin = -1.5, yMax = 1.5, xMin = -2.0, xMax = 1.0;
+    float yMin = -1.5, yMax = 1.5, xMin = -2.0, xMax = 1.0;
     int width = 7680, height = 4320;
-    int maxIterations = 10000;
+    int maxIterations = 100;
     int* mandelbrotSpace = create2DSpace(width, height);
 
     cl_platform_id platforms[numberOfPlatforms];
@@ -61,13 +61,13 @@ int main(int argc, char const* argv[]) {
         context, CL_MEM_READ_WRITE, width * height * sizeof(int), NULL, &err);
     printError(err, "Creating buffer for mandelbrotSpace");
 
-    err = clSetKernelArg(kernel, 0, sizeof(int), &xMin);
+    err = clSetKernelArg(kernel, 0, sizeof(float), &xMin);
     printError(err, "Setting kernel argument 0 - xMin");
-    err = clSetKernelArg(kernel, 1, sizeof(int), &xMax);
+    err = clSetKernelArg(kernel, 1, sizeof(float), &xMax);
     printError(err, "Setting kernel argument 1 - xMax");
-    err = clSetKernelArg(kernel, 2, sizeof(int), &yMin);
+    err = clSetKernelArg(kernel, 2, sizeof(float), &yMin);
     printError(err, "Setting kernel argument 2 - yMin");
-    err = clSetKernelArg(kernel, 3, sizeof(int), &yMax);
+    err = clSetKernelArg(kernel, 3, sizeof(float), &yMax);
     printError(err, "Setting kernel argument 3 - yMax");
     err = clSetKernelArg(kernel, 4, sizeof(int), &width);
     printError(err, "Setting kernel argument 4 - width");
@@ -147,8 +147,10 @@ int main(int argc, char const* argv[]) {
 
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
-            proportion =
-                (double)mandelbrotSpace[x * height + y] / maxIterations;
+            // if (mandelbrotSpace[y * width + x] > 5000) {
+            //     printf("Iteration: %d\n", mandelbrotSpace[y * width + x]);
+            // }
+            proportion = (double)mandelbrotSpace[y * width + x] / maxIterations;
             color = (int)(proportion * 255);
             row[x * 3] = color;      // Red
             row[x * 3 + 1] = color;  // Green
