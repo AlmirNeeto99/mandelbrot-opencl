@@ -263,3 +263,14 @@ void printWorkGroupInfo(size_t globalSize[2], size_t localSize[2]) {
 
     printf("============================================\n");
 }
+
+void clCleanUp(cl_device_id device, cl_context context,
+             cl_command_queue commandQueue, cl_kernel kernel,
+             cl_program program, cl_mem mandelbrotBuffer) {
+    if (device) clReleaseDevice(device);
+    if (mandelbrotBuffer) clReleaseMemObject(mandelbrotBuffer);
+    if (kernel) clReleaseKernel(kernel);
+    if (program) clReleaseProgram(program);
+    if (commandQueue) clReleaseCommandQueue(commandQueue);
+    if (context) clReleaseContext(context);
+}
