@@ -36,7 +36,7 @@ __kernel void mandelbrot(__const float xMin, __const float xMax,
 
   while (iterations < maxIterations) {
 
-    if (sqrt(zx * zx + zy * zy) > 2.0f) {
+    if (zx * zx + zy * zy > 4.0f) {
       escaped = true;
       break;
     }
