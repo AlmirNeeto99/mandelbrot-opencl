@@ -19,8 +19,14 @@ int main(int argc, char const* argv[]) {
 
     float yMin = -1.5f, yMax = 1.5f, xMin = -2.0f, xMax = 1.0f;
     int width = 7680, height = 4320;
-    int maxIterations = 100;
+    int maxIterations = 150000;
     int* mandelbrotSpace = create2DSpace(width, height);
+
+    cl_context context;
+    cl_program program;
+    cl_kernel kernel;
+    cl_command_queue commandQueue;
+    cl_mem mandelbrotBuffer;
 
     cl_platform_id platforms[numberOfPlatforms];
     clGetPlatformIDs(numberOfPlatforms, platforms, NULL);
@@ -32,33 +38,36 @@ int main(int argc, char const* argv[]) {
 
     printDeviceInfo(deviceWithHighestComputeUnits);
 
-    cl_context context = clCreateContext(
-        NULL, 1, &deviceWithHighestComputeUnits, NULL, NULL, NULL);
+    context = clCreateContext(NULL, 1, &deviceWithHighestComputeUnits, NULL,
+                              NULL, NULL);
 
-    cl_command_queue commandQueue = clCreateCommandQueueWithProperties(
-        context, deviceWithHighestComputeUnits, NULL, NULL);
+    commandQueue = clCreateCommandQueueWithProperties(
+        context, deviceWithHighestComputeUnits, NULL, &err);
+    printError(err, "Creating command queue");
 
     char* kernelSource = NULL;
     readKernelSource("mandelbrot", &kernelSource);
 
     if (kernelSource == NULL) {
+        clCleanUp(deviceWithHighestComputeUnits, context, commandQueue, kernel,
+                  program, mandelbrotBuffer);
         return 1;
     }
     printf("============================================\n");
 
-    cl_program program = clCreateProgramWithSource(
-        context, 1, (const char**)&kernelSource, NULL, &err);
+    program = clCreateProgramWithSource(context, 1, (const char**)&kernelSource,
+                                        NULL, &err);
     printError(err, "Creating program");
 
     err = clBuildProgram(program, 1, &deviceWithHighestComputeUnits, NULL, NULL,
                          NULL);
     printError(err, "Building program");
 
-    cl_kernel kernel = clCreateKernel(program, "mandelbrot", &err);
+    kernel = clCreateKernel(program, "mandelbrot", &err);
     printError(err, "Creating kernel");
 
-    cl_mem mandelbrotBuffer = clCreateBuffer(
-        context, CL_MEM_READ_WRITE, width * height * sizeof(int), NULL, &err);
+    mandelbrotBuffer = clCreateBuffer(context, CL_MEM_READ_WRITE,
+                                      width * height * sizeof(int), NULL, &err);
     printError(err, "Creating buffer for mandelbrotSpace");
 
     err = clSetKernelArg(kernel, 0, sizeof(float), &xMin);
@@ -97,12 +106,8 @@ int main(int argc, char const* argv[]) {
                         NULL);
     printError(err, "Reading buffer");
 
-    clReleaseMemObject(mandelbrotBuffer);
-    clReleaseKernel(kernel);
-    clReleaseProgram(program);
-    clReleaseCommandQueue(commandQueue);
-    clReleaseContext(context);
-    clReleaseDevice(deviceWithHighestComputeUnits);
+    clCleanUp(deviceWithHighestComputeUnits, context, commandQueue, kernel,
+              program, mandelbrotBuffer);
 
     const char* outputName = "mandelbrots/mandelbrot.png";
 
