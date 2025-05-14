@@ -1,0 +1,22 @@
+-> Number of available OpenCL platforms: 1
+-> NVIDIA CUDA
+	-> OpenCL 3.0 CUDA 11.8.88
+	-> FULL_PROFILE
+	-> NVIDIA Corporation
+	-> Number of GPU devices: 1
+===========================================================
+-> Device with highest compute units: NVIDIA A100-SXM4-80GB
+-> Highest compute units: 108
+===========================================================
+-> Device name: NVIDIA A100-SXM4-80GB
+-> Device version: OpenCL 3.0 CUDA
+-> Device vendor: NVIDIA Corporation
+-> Global memory size: 79 GB
+-> Local memory size: 48 KB
+-> Max compute units: 108
+-> Max work item dimensions: 3
+-> Max work group size: 1024
+-> Max work item sizes: 1024 x 1024 x 64
+-> Preferred work group size multiple: 32
+===========================================================
+-> Reading kernel from path: src/kernels/mandelbrot.cl
