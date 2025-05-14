@@ -15,11 +15,18 @@ int main(int argc, char const* argv[]) {
         return 1;
     }
 
+    int maxIterations = 0;
+
+    scanf("%d", &maxIterations);
+    if (maxIterations <= 0) {
+        printf("-> Invalid number of iterations!\n");
+        return 1;
+    }
+
     cl_int err;
 
     float yMin = -1.5f, yMax = 1.5f, xMin = -2.0f, xMax = 1.0f;
     int width = 7680, height = 4320;
-    int maxIterations = 150000;
     int* mandelbrotSpace = create2DSpace(width, height);
 
     cl_context context;
@@ -41,8 +48,11 @@ int main(int argc, char const* argv[]) {
     context = clCreateContext(NULL, 1, &deviceWithHighestComputeUnits, NULL,
                               NULL, NULL);
 
+    cl_queue_properties queueProperties[] = {CL_QUEUE_PROPERTIES,
+                                             CL_QUEUE_PROFILING_ENABLE, 0};
+
     commandQueue = clCreateCommandQueueWithProperties(
-        context, deviceWithHighestComputeUnits, NULL, &err);
+        context, deviceWithHighestComputeUnits, queueProperties, &err);
     printError(err, "Creating command queue");
 
     char* kernelSource = NULL;
@@ -94,12 +104,28 @@ int main(int argc, char const* argv[]) {
 
     printWorkGroupInfo(globalSize, localSize);
 
+    cl_event kernelEvent;
+
     err = clEnqueueNDRangeKernel(commandQueue, kernel, 2, NULL, globalSize,
-                                 localSize, 0, NULL, NULL);
+                                 localSize, 0, NULL, &kernelEvent);
     printError(err, "Enqueueing kernel");
 
     err = clFinish(commandQueue);
     printError(err, "Finishing command queue");
+
+    cl_ulong timeStart, timeEnd;
+    err = clGetEventProfilingInfo(kernelEvent, CL_PROFILING_COMMAND_START,
+                                  sizeof(cl_ulong), &timeStart, NULL);
+    printError(err, "Getting kernel profiling info - start time");
+
+    err = clGetEventProfilingInfo(kernelEvent, CL_PROFILING_COMMAND_END,
+                                  sizeof(cl_ulong), &timeEnd, NULL);
+    printError(err, "Getting kernel profiling info - end time");
+
+    double kernelExecutionTime = (timeEnd - timeStart) / 1e6;
+    printf("Kernel execution time: %.6f ms\n", kernelExecutionTime);
+
+    clReleaseEvent(kernelEvent);
 
     clEnqueueReadBuffer(commandQueue, mandelbrotBuffer, CL_TRUE, 0,
                         width * height * sizeof(int), mandelbrotSpace, 0, NULL,
