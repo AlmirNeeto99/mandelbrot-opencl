@@ -1,0 +1,10 @@
+#!/bin/bash
+
+ITERATIONS=1000000
+
+for ((i=10000; i<=$ITERATIONS; i+=10000)); do
+    echo $i > input.txt && cat input.txt | ./mandelbrot
+done
+
+rm input.txt
+echo "Done"
