@@ -42,3 +42,22 @@ int *create2DSpace(int width, int height) {
 
     return space;
 }
+
+void logExperiment(int numberComputeUnits, size_t globalGroupSize[2],
+                   size_t localGroupSize[2], int maxNumberOfIterations,
+                   double elapsedTime) {
+    printf("-> Elapsed time: %lf\n", elapsedTime);
+
+    FILE *experimentFile = fopen("experiments.csv", "a");
+
+    if (!experimentFile) {
+        printf("-> Unable to open experiment file.\n");
+        return;
+    }
+
+    fprintf(experimentFile, "%d,'[%zu,%zu]','[%zu,%zu]',%d,%lf\n",
+            numberComputeUnits, globalGroupSize[0], globalGroupSize[1],
+            localGroupSize[0], localGroupSize[1], maxNumberOfIterations,
+            elapsedTime);
+    fclose(experimentFile);
+}
