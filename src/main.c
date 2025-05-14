@@ -123,7 +123,17 @@ int main(int argc, char const* argv[]) {
     printError(err, "Getting kernel profiling info - end time");
 
     double kernelExecutionTime = (timeEnd - timeStart) / 1e6;
-    printf("Kernel execution time: %.6f ms\n", kernelExecutionTime);
+    printf("-> Kernel execution time: %.6f ms\n", kernelExecutionTime);
+
+    int maxComputeUnits = 0;
+    err = clGetDeviceInfo(deviceWithHighestComputeUnits,
+                          CL_DEVICE_MAX_COMPUTE_UNITS, sizeof(int),
+                          &maxComputeUnits, NULL);
+    printError(err, "Getting device info - max compute units");
+
+    logExperiment(maxComputeUnits, globalSize, localSize, maxIterations,
+                  kernelExecutionTime);
+    printf("============================================\n");
 
     clReleaseEvent(kernelEvent);
 
