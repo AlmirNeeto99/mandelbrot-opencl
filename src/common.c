@@ -55,7 +55,7 @@ void logExperiment(int numberComputeUnits, size_t globalGroupSize[2],
         return;
     }
 
-    fprintf(experimentFile, "%d,'[%zu,%zu]','[%zu,%zu]',%d,%lf\n",
+    fprintf(experimentFile, "%d,\"[%zu,%zu]\",\"[%zu,%zu]\",%d,%lf\n",
             numberComputeUnits, globalGroupSize[0], globalGroupSize[1],
             localGroupSize[0], localGroupSize[1], maxNumberOfIterations,
             elapsedTime);
