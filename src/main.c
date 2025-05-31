@@ -5,6 +5,13 @@
 #include "headers/cl-utils.h"
 #include "headers/common.h"
 
+#define WIDTH 7680
+#define HEIGHT 4320
+#define Y_MIN -1.5f
+#define Y_MAX 1.5f
+#define X_MIN -2.0f
+#define X_MAX 1.0f
+
 int main(int argc, char const* argv[]) {
     cl_uint numberOfPlatforms = getNumberOfPlatforms();
     if (numberOfPlatforms > 0) {
@@ -25,8 +32,8 @@ int main(int argc, char const* argv[]) {
 
     cl_int err;
 
-    float yMin = -1.5f, yMax = 1.5f, xMin = -2.0f, xMax = 1.0f;
-    int width = 7680, height = 4320;
+    float yMin = Y_MIN, yMax = Y_MAX, xMin = X_MIN, xMax = X_MAX;
+    int width = WIDTH, height = HEIGHT;
     int* mandelbrotSpace = create2DSpace(width, height);
 
     cl_context context;
