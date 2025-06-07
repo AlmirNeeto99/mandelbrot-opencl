@@ -107,7 +107,7 @@ int main(int argc, char const* argv[]) {
     printf("============================================\n");
 
     size_t globalSize[2] = {width, height};
-    size_t localSize[2] = {32, 32};
+    size_t localSize[2] = {32, 16};
 
     printWorkGroupInfo(globalSize, localSize);
 
